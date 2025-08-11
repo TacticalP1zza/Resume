@@ -1,0 +1,48 @@
+/* Reset some defaults */
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: #f0f4f8;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+.grid-container {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-gap: 40px;
+    width: 90vw;
+    max-width: 1800px;
+    padding: 20px;
+
+}
+
+.grid-item {
+    background: #1e90ff; /* DodgerBlue */
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 30px 20px;
+    font-size: 1.2rem;
+    font-weight: 600;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(30, 144, 255, 0.3);
+    cursor: pointer;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    user-select: none;
+    text-align: center;
+    height: 200px;
+    
+}
+
+.grid-item:hover {
+    transform: scale(1.1);
+    box-shadow: 0 10px 20px rgba(30, 144, 255, 0.6);
+}

@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Idea 22018575 - Demo</title>
+    <!-- Link your external stylesheet here -->
+    <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+<header>
+    <img class="mew" src="mews.png" alt="Mew Logo" />
+    <img class="logo" src="Idealogo.svg" alt="Idea Logo" />
+</header>
+
+<nav class="nav">
+    <ul>
+        <li>Home</li>
+        <li>Shop</li>
+        <li>Store</li>
+        <li>Login</li>
+    </ul>
+</nav>
+
+<div class="dropdowns">
+    <div class="dropdown" id="tableDropdown">
+        <div class="select">
+            <span class="selected">Select Table</span>
+            <div class="arrow"></div>
+        </div>
+        <ul class="menu">
+            <li data-table="Supplier" class="active">Suppliers</li>
+            <li data-table="Customer">Customers</li>
+            <li data-table="Product">Products</li>
+            <li data-table="Store">Stores</li>
+            <li data-table="COrder">COrder</li>
+            <li data-table="Employee">Employees</li>
+            <li data-table="DeliveryDetails">DeliveryDetails</li>
+            <li data-table="SupplierShipments">SupplierShipments</li>
+            <li data-table="CollectedProduct">CollectedProduct</li>
+            <li data-table="DelieveredProduct">DelieveredProduct</li>
+        </ul>
+    </div>
+    <div class="search">
+        <input type="text" id="searchInput" placeholder="Search Database" />
+        <button id="searchBtn">Search</button>
+    </div>
+</div>
+
+<p class="text">Click on a column to select it, then type a search query in</p>
+
+<div id="tableContainer">
+    <!-- Demo Table will be rendered here -->
+</div>
+
+<script>
+    // Demo data for tables and their columns & sample rows
+    const demoData = {
+        Supplier: {
+            columns: ['Supplier_ID', 'Supplier_Name', 'Country'],
+            rows: [
+                ['S001', 'Acme Corp', 'USA'],
+                ['S002', 'Globex Inc', 'Canada'],
+                ['S003', 'Soylent Corp', 'UK'],
+            ],
+        },
+        Customer: {
+            columns: ['Customer_ID', 'Customer_Name', 'City'],
+            rows: [
+                ['C001', 'John Doe', 'New York'],
+                ['C002', 'Jane Smith', 'Los Angeles'],
+                ['C003', 'Bob Johnson', 'Chicago'],
+            ],
+        },
+        Product: {
+            columns: ['Product_ID', 'Product_Name', 'Price'],
+            rows: [
+                ['P001', 'Widget', '$10'],
+                ['P002', 'Gadget', '$20'],
+                ['P003', 'Thingamajig', '$15'],
+            ],
+        },
+        // Add more demo tables as needed
+    };
+
+    let selectedTable = null;
+    let selectedColumn = null;
+
+    const tableDropdown = document.getElementById('tableDropdown');
+    const selectDiv = tableDropdown.querySelector('.select');
+    const arrow = tableDropdown.querySelector('.arrow');
+    const menu = tableDropdown.querySelector('.menu');
+    const selectedSpan = selectDiv.querySelector('.selected');
+
+    // Open/close dropdown menu
+    selectDiv.addEventListener('click', () => {
+        selectDiv.classList.toggle('select-clicked');
+        arrow.classList.toggle('arrow-rotate');
+        menu.classList.toggle('menu-open');
+    });
+
+    // Select table from dropdown
+    menu.querySelectorAll('li').forEach(li => {
+        li.addEventListener('click', () => {
+            selectedTable = li.dataset.table;
+            selectedSpan.textContent = li.textContent;
+            selectedColumn = null; // reset column on table change
+            renderTable();
+            // Close dropdown
+            selectDiv.classList.remove('select-clicked');
+            arrow.classList.remove('arrow-rotate');
+            menu.classList.remove('menu-open');
+
+            // Mark active item
+            menu.querySelectorAll('li').forEach(item => item.classList.remove('active'));
+            li.classList.add('active');
+        });
+    });
+
+    // Search button event
+    document.getElementById('searchBtn').addEventListener('click', () => {
+        const searchTerm = document.getElementById('searchInput').value.trim();
+        if (!selectedTable) {
+            alert('Please select a table first.');
+            return;
+        }
+        if (!selectedColumn) {
+            alert('Please click a column to select it before searching.');
+            return;
+        }
+        if (!searchTerm) {
+            alert('Please enter a search term.');
+            return;
+        }
+        alert(`Search for "${searchTerm}" in column "${selectedColumn}" of table "${selectedTable}" (Demo alert)`);
+    });
+
+    // Render table based on selectedTable
+    function renderTable() {
+        const container = document.getElementById('tableContainer');
+        container.innerHTML = '';
+
+        if (!selectedTable || !demoData[selectedTable]) {
+            container.innerHTML = '<p style="text-align:center;color:#888;">Select a table to see data.</p>';
+            return;
+        }
+
+        const { columns, rows } = demoData[selectedTable];
+
+        // Create table
+        const table = document.createElement('table');
+        table.classList.add('table');
+
+        // Header row with clickable columns
+        const thead = document.createElement('thead');
+        const headerRow = document.createElement('tr');
+        columns.forEach(col => {
+            const th = document.createElement('th');
+            const btn = document.createElement('button');
+            btn.textContent = col;
+            btn.addEventListener('click', () => {
+                selectedColumn = col;
+                // Highlight selected column button
+                table.querySelectorAll('th button').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+            });
+            th.appendChild(btn);
+            headerRow.appendChild(th);
+        });
+        thead.appendChild(headerRow);
+        table.appendChild(thead);
+
+        // Body rows
+        const tbody = document.createElement('tbody');
+        rows.forEach(rowData => {
+            const tr = document.createElement('tr');
+            rowData.forEach(cellData => {
+                const td = document.createElement('td');
+                td.textContent = cellData;
+                tr.appendChild(td);
+            });
+            tbody.appendChild(tr);
+        });
+        table.appendChild(tbody);
+
+        container.appendChild(table);
+    }
+
+    // Initialize with a message
+    renderTable();
+</script>
+</body>
+</html>
